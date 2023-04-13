@@ -18,10 +18,17 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     private String name;
+
     private int age;
+
     private String mobNo;
+
     @Enumerated(EnumType.STRING)
     private Department department;
+
+    @OneToOne(mappedBy = "student",cascade = CascadeType.ALL)
+    Card card;
 
 }

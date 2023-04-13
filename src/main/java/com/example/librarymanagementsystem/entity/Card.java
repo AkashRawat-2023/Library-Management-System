@@ -20,10 +20,16 @@ public class Card {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
     @CreationTimestamp
     private Date issueDate;
+
     @Enumerated(EnumType.STRING)
     private CardStatus cardStatus;
+
     private String validDate;
 
+    @OneToOne
+    @JoinColumn
+    Student student;
 }
