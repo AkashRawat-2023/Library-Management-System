@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "book")
 @NoArgsConstructor
@@ -23,7 +26,20 @@ public class Book {
     private int numberOfPages;
     private int price;
 
+    private boolean isIssued = false;
+
+    //Child to Parent Relationship
     @ManyToOne
     @JoinColumn
     Author author;
+
+    @ManyToOne
+    @JoinColumn
+    Card card;
+
+    //Parent to Child Relationship
+    //Child is many therefore List of transaction
+
+    @OneToMany(mappedBy = "book",cascade = CascadeType.ALL)
+    List<Transaction> transactionList = new ArrayList<>();
 }
