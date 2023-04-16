@@ -33,7 +33,7 @@ public class Card {
     @Enumerated(EnumType.STRING)
     private CardStatus cardStatus;
 
-    private String validDate;
+    private String validTill;
 
     //Child to Parent Relationship
     //Student is Parent && Card is Child

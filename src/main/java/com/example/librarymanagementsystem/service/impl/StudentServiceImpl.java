@@ -2,6 +2,8 @@ package com.example.librarymanagementsystem.service.impl;
 
 import com.example.librarymanagementsystem.DTO.RequestDto.StudentRequestDto;
 import com.example.librarymanagementsystem.DTO.RequestDto.UpdateStudentMobRequestDto;
+import com.example.librarymanagementsystem.DTO.ResponseDto.CardResponseDto;
+import com.example.librarymanagementsystem.DTO.ResponseDto.StudentResponseDto;
 import com.example.librarymanagementsystem.DTO.ResponseDto.UpdateStudentMobNoResponseDto;
 import com.example.librarymanagementsystem.entity.Card;
 import com.example.librarymanagementsystem.entity.Student;
@@ -29,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
 
         Card card = new Card();
         card.setCardStatus(CardStatus.ACTIVATED);
-        card.setValidDate("2024-01-01");
+        card.setValidTill("2024-01-01");
         card.setStudent(student);
 
         student.setCard(card);
@@ -58,5 +60,29 @@ public class StudentServiceImpl implements StudentService {
         catch (Exception e){
             throw new StudentNotFoundException("Invalid Student Id");
         }
+    }
+
+    @Override
+    public StudentResponseDto getStudentById(int id) {
+        Student student = studentRepository.findById(id).get();
+
+        //prepare a response dto
+        StudentResponseDto studentResponseDto = new StudentResponseDto();
+        studentResponseDto.setId(student.getId());
+        studentResponseDto.setName(student.getName());
+        studentResponseDto.setDepartment(student.getDepartment());
+        studentResponseDto.setAge(student.getAge());
+        studentResponseDto.setMobNo(student.getMobNo());
+
+        CardResponseDto cardResponseDto = new CardResponseDto();
+        cardResponseDto.setIssueDate(student.getCard().getIssueDate());
+        cardResponseDto.setCardStatus(student.getCard().getCardStatus());
+        cardResponseDto.setUpdateOn(student.getCard().getUpdateOn());
+        cardResponseDto.setValidTill(student.getCard().getValidTill());
+        cardResponseDto.setId(student.getCard().getId());
+
+        studentResponseDto.setCardResponseDto(cardResponseDto);
+        return studentResponseDto;
+
     }
 }
