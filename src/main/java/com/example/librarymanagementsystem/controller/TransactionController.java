@@ -1,7 +1,9 @@
 package com.example.librarymanagementsystem.controller;
 
 import com.example.librarymanagementsystem.DTO.RequestDto.IssueBookRequestDto;
+import com.example.librarymanagementsystem.DTO.RequestDto.ReturnBookRequestDto;
 import com.example.librarymanagementsystem.DTO.ResponseDto.IssueBookResponseDto;
+import com.example.librarymanagementsystem.DTO.ResponseDto.ReturnBookResponseDto;
 import com.example.librarymanagementsystem.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,5 +21,10 @@ public class TransactionController {
     @PostMapping("/issue_book")
     public IssueBookResponseDto issueBook(@RequestBody IssueBookRequestDto issueBookRequestDto) throws Exception {
         return transactionService.issueBook(issueBookRequestDto);
+    }
+
+    @PostMapping("/return_book")
+    public ReturnBookResponseDto returnBook(@RequestBody ReturnBookRequestDto returnBookRequestDto) throws Exception {
+        return transactionService.returnBook(returnBookRequestDto);
     }
 }

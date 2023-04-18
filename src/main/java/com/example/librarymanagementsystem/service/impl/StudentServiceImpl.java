@@ -3,6 +3,7 @@ package com.example.librarymanagementsystem.service.impl;
 import com.example.librarymanagementsystem.DTO.RequestDto.StudentRequestDto;
 import com.example.librarymanagementsystem.DTO.RequestDto.UpdateStudentMobRequestDto;
 import com.example.librarymanagementsystem.DTO.ResponseDto.CardResponseDto;
+import com.example.librarymanagementsystem.DTO.ResponseDto.DeleteStudentByIdResponseDto;
 import com.example.librarymanagementsystem.DTO.ResponseDto.StudentResponseDto;
 import com.example.librarymanagementsystem.DTO.ResponseDto.UpdateStudentMobNoResponseDto;
 import com.example.librarymanagementsystem.entity.Card;
@@ -13,6 +14,9 @@ import com.example.librarymanagementsystem.repository.StudentRepository;
 import com.example.librarymanagementsystem.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -85,4 +89,28 @@ public class StudentServiceImpl implements StudentService {
         return studentResponseDto;
 
     }
+
+    @Override
+    public DeleteStudentByIdResponseDto deleteStudent(int id) throws Exception {
+
+        try {
+            Student student = studentRepository.findById(id).get();
+            studentRepository.delete(student);
+            //preparing a response dto
+
+            DeleteStudentByIdResponseDto deleteStudentByIdResponseDto = new DeleteStudentByIdResponseDto();
+            deleteStudentByIdResponseDto.setName(student.getName());
+            deleteStudentByIdResponseDto.setDepartment(student.getDepartment());
+            deleteStudentByIdResponseDto.setMessage("Student Deleted");
+
+            return deleteStudentByIdResponseDto;
+        }
+        catch (Exception e){
+            throw new Exception("Student Id is not present");
+        }
+
+
+    }
+
+
 }

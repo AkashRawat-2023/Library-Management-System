@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.controller;
 
+import com.example.librarymanagementsystem.DTO.RequestDto.AddBookRequestDto;
 import com.example.librarymanagementsystem.entity.Book;
 import com.example.librarymanagementsystem.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,14 @@ public class BookController {
     BookService bookService;
 
     @PostMapping("/add")
-    public String addBook(@RequestBody Book book) throws Exception {
+    public String addBook(@RequestBody AddBookRequestDto addBookRequestDto) throws Exception {
 
-        return bookService.addBook(book);
+        return bookService.addBook(addBookRequestDto);
     }
 
     // find all the books
 
     // find all the books of a particular authorId
 
-    // // find the number of books written by an autho
+    // // find the number of books written by an author
 }

@@ -1,9 +1,12 @@
 package com.example.librarymanagementsystem.service.impl;
 
 import com.example.librarymanagementsystem.DTO.RequestDto.IssueBookRequestDto;
+import com.example.librarymanagementsystem.DTO.RequestDto.ReturnBookRequestDto;
 import com.example.librarymanagementsystem.DTO.ResponseDto.IssueBookResponseDto;
+import com.example.librarymanagementsystem.DTO.ResponseDto.ReturnBookResponseDto;
 import com.example.librarymanagementsystem.entity.Book;
 import com.example.librarymanagementsystem.entity.Card;
+import com.example.librarymanagementsystem.entity.Student;
 import com.example.librarymanagementsystem.entity.Transaction;
 import com.example.librarymanagementsystem.enums.CardStatus;
 import com.example.librarymanagementsystem.enums.TransactionStatus;
@@ -73,10 +76,10 @@ public class TransactionServiceImpl implements TransactionService {
             throw new Exception("Card is not Active");
         }
 
-        if(!book.isIssued()){
+        if(book.isIssued()==true){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository.save(transaction);
-            throw new Exception("Book is not avaliable");
+            throw new Exception("Book is not available");
         }
 
         transaction.setTransactionStatus(TransactionStatus.SUCCESS);
@@ -102,4 +105,65 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     //return book API
+    @Override
+    public ReturnBookResponseDto returnBook(ReturnBookRequestDto returnBookRequestDto) throws Exception {
+
+        // Return a book is also a transaction
+        Transaction transaction = new Transaction();
+        transaction.setTransactionNumber(String.valueOf(UUID.randomUUID()));
+        transaction.setIssueOperation(false);
+
+        //checking if card id entered is correct
+        Card card;
+        try{
+            card = cardRepository.findById(returnBookRequestDto.getCardId()).get();
+        }catch (Exception e){
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository.save(transaction);
+            throw new Exception("Please enter correct card id");
+        }
+        transaction.setCard(card);
+
+        //checking if book id entered is correct
+        Book book;
+        try{
+            book = bookRepository.findById(returnBookRequestDto.getBookId()).get();
+        }
+        catch (Exception e){
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository.save(transaction);
+            throw new Exception("Invalid bookId !!!");
+        }
+        transaction.setBook(book);
+
+        if(card.getCardStatus() != CardStatus.ACTIVATED){
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository.save(transaction);
+            throw new Exception("Card is not Active");
+        }
+
+        if(book.isIssued() == false || !book.getCard().equals(card)){
+            transaction.setTransactionStatus(TransactionStatus.FAILED);
+            transactionRepository.save(transaction);
+            throw new Exception("Book id entered is wrong");
+        }
+
+        transaction.setTransactionStatus(TransactionStatus.SUCCESS);
+        book.setIssued(false);
+        book.setCard(null);
+        book.getTransactionList().add(transaction);
+        card.getBookIssued().remove(book);
+        card.getTransactionList().add(transaction);
+        cardRepository.save(card);
+
+        //prepare response dto
+        ReturnBookResponseDto returnBookResponseDto = new ReturnBookResponseDto();
+
+        returnBookResponseDto.setTransactionNumber(transaction.getTransactionNumber());
+        returnBookResponseDto.setTransactionStatus(transaction.getTransactionStatus());
+        returnBookResponseDto.setBookName(book.getTitle());
+
+        return returnBookResponseDto;
+    }
+
 }
