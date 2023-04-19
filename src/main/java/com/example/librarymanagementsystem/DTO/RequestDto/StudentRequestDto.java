@@ -18,5 +18,5 @@ public class StudentRequestDto {
 
     private Department department;
 
-    private String mobNo;
+    private String emailId;
 }

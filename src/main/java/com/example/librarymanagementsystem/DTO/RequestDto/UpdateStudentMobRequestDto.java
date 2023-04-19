@@ -13,5 +13,5 @@ public class UpdateStudentMobRequestDto {
 
     private int id;
 
-    private String mobNo;
+    private String emailId;
 }

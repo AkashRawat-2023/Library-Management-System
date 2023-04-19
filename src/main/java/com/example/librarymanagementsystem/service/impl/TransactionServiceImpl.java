@@ -16,6 +16,8 @@ import com.example.librarymanagementsystem.repository.TransactionRepository;
 import com.example.librarymanagementsystem.service.TransactionService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -31,6 +33,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     TransactionRepository transactionRepository;
+
+    @Autowired
+    private JavaMailSender emailSender;
 
 
     @Override
@@ -99,6 +104,15 @@ public class TransactionServiceImpl implements TransactionService {
         issueBookResponseDto.setBookName(book.getTitle());
         issueBookResponseDto.setTransactionNumber(transaction.getTransactionNumber());
         issueBookResponseDto.setTransactionStatus(transaction.getTransactionStatus());
+
+        String text = "Congrats! "+card.getStudent().getName()+ " You have been issued the book "+ book.getTitle();
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("gplib.noreply@gmail.com");
+        message.setTo(card.getStudent().getEmailId());
+        message.setSubject("Gurgaon Public Library - Issue book");
+        message.setText(text);
+        emailSender.send(message);
 
         return issueBookResponseDto;
 

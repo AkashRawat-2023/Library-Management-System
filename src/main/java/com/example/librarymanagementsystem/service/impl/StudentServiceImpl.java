@@ -31,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
         student.setAge(studentRequestDto.getAge());
         student.setName(studentRequestDto.getName());
         student.setDepartment(studentRequestDto.getDepartment());
-        student.setMobNo(studentRequestDto.getMobNo());
+        student.setEmailId(studentRequestDto.getEmailId());
 
         Card card = new Card();
         card.setCardStatus(CardStatus.ACTIVATED);
@@ -51,13 +51,13 @@ public class StudentServiceImpl implements StudentService {
 
         try{
             Student student = studentRepository.findById(updateStudentMobRequestDto.getId()).get();
-            student.setMobNo(updateStudentMobRequestDto.getMobNo());
+            student.setEmailId(updateStudentMobRequestDto.getEmailId());
             Student updateStudent = studentRepository.save(student);
 
             //prepare response dto
             UpdateStudentMobNoResponseDto updateStudentMobNoResponseDto = new UpdateStudentMobNoResponseDto();
             updateStudentMobNoResponseDto.setName(updateStudent.getName());
-            updateStudentMobNoResponseDto.setMobNo(updateStudentMobRequestDto.getMobNo());
+            updateStudentMobNoResponseDto.setMobNo(updateStudentMobRequestDto.getEmailId());
             return updateStudentMobNoResponseDto;
 
         }
@@ -76,7 +76,7 @@ public class StudentServiceImpl implements StudentService {
         studentResponseDto.setName(student.getName());
         studentResponseDto.setDepartment(student.getDepartment());
         studentResponseDto.setAge(student.getAge());
-        studentResponseDto.setMobNo(student.getMobNo());
+        studentResponseDto.setMobNo(student.getEmailId());
 
         CardResponseDto cardResponseDto = new CardResponseDto();
         cardResponseDto.setIssueDate(student.getCard().getIssueDate());
